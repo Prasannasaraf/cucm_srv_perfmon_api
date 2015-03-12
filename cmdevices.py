@@ -55,8 +55,10 @@ for model in models:
 layout_reduce=[]
 for i in range(len(layout)):
     for j in range(i+1,len(layout)):
-        if (layout[i]['Name']==layout[j]['Name']) and (layout[i]['Status']!=layout[j]['Status']) and (layout[i]['Status']=='Registered' or layout[j]['Status']=='Registered'):
+        if (layout[i]['Name']==layout[j]['Name']) and (layout[i]['Status']!=layout[j]['Status']) and (layout[i]['Status']=='Registered'  and layout[j]['Status']=='UnRegistered'):
             layout[j]['Status']='split'
+        if (layout[i]['Name']==layout[j]['Name']) and (layout[i]['Status']!=layout[j]['Status']) and (layout[i]['Status']=='UnRegistered'  and layout[j]['Status']=='Registered'):
+            layout[i]['Status']='split'
 for i in layout:
     if i['Status']!='split':
         layout_reduce.append(i)
