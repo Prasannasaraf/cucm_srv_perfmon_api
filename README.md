@@ -7,6 +7,6 @@ For script to work:
 
 2) Change IP address of your CUCM publisher (do not forget to activate appropriate services on it)
 
-3) Select models types you are intersted in 
+3) Select model types you are interested in 
 
 4) Change output of the script if needed
