@@ -1,5 +1,6 @@
-# cucm_srv_api
+# cucm_srv_perfmon_api
 This script written in python (2.7.9) queries CUCM (Cisco Unified Communicaion Manager) Serviceability API for a registration status of phones and other devices controled by it. 
+More at https://developer.cisco.com/site/sxml/discover/overview/perfmon/
 
 For script to work:
 
