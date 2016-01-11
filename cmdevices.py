@@ -36,8 +36,8 @@ for model in models:
     t0 = HttpAuthenticated(username=user, password=passwd)
     t0.handler=urllib2.HTTPBasicAuthHandler(t0.pm)
     t1=urllib2.HTTPSHandler(context=ssl_def_context)
-    t.urlopener = urllib2.build_opener(t0.handler,t1)
-    client=Client(wsdl,location=location, plugins=[ImportDoctor(imp)], transport=t)
+    t0.urlopener = urllib2.build_opener(t0.handler,t1)
+    client=Client(wsdl,location=location, plugins=[ImportDoctor(imp)], transport=t0)
     result = client.service.SelectCmDevice('',{'SelectBy':'Name', 'Class':'Phone', 'Model':model})
     for node in result['SelectCmDeviceResult']['CmNodes']:
         for device in node['CmDevices']:
