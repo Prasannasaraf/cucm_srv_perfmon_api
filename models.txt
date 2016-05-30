@@ -32,8 +32,7 @@
 131 SIP Trunk
 132 SIP Gateway
 133 WSM Trunk
-85 Cisco Video Conference Bridge (IPVC-35
-xx)
+85 Cisco Video Conference Bridge (IPVC-35xx)
 522 BlackBerry MVS VoWifi
 640 Usage Profile
 598 Ascom IP-DECT Device
