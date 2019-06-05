@@ -63,13 +63,15 @@ def compare_outputs(a, b):
     common_eq = set(k for k in _common if sorted(a[k]) == sorted(b[k]))
     common_neq = _common - common_eq
     added = ['{}  added'.format(x) for x, y in b.items() if x in keys_added]
-    deleted = ['{} deleted'.format(x) for x, y in a.items() if x in keys_deleted]
+    deleted = ['{} deleted'.format(x)
+               for x, y in a.items() if x in keys_deleted]
     changed = []
     for i in common_neq:
         for pair in izip_longest(sorted(a[i]), sorted(b[i]), fillvalue=dict((k, 'NA') for k in ('Status', 'IP'))):
             for key in ('Status', 'IP'):
                 if pair[0][key] != pair[1][key]:
-                    changed.append('{} changed {} to {} on node {}'.format(i, key, pair[1][key],pair[1]['node']))
+                    changed.append('{} changed {} to {} on node {}'.format(
+                        i, key, pair[1][key], pair[1]['node']))
     return added + deleted + changed
 
 
@@ -77,10 +79,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--cucm", help="CUCM node IP", required=True)
     parser.add_argument("-u", "--user", help="AXL username", required=True)
-    parser.add_argument("-p", "--password", help="AXL user password", required=True)
+    parser.add_argument("-p", "--password",
+                        help="AXL user password", required=True)
     parser.add_argument("-m", "--models", help="models", default='682 626')
     args = parser.parse_args()
-    headers = {'SOAPAction': '"http://schemas.cisco.com/ast/soap/action/#RisPort#SelectCmDevice"'}
+    headers = {
+        'SOAPAction': '"http://schemas.cisco.com/ast/soap/action/#RisPort#SelectCmDevice"'}
     state_info = ''
     temp = defaultdict(list)
     models = {}
@@ -90,35 +94,35 @@ if __name__ == '__main__':
             models[models_re.split(model)[1]] = models_re.split(model)[2]
     models_required = args.models.split()
     try:
-        while True:
-            all_devices = defaultdict(list)
-            for model in models_required:
-                response = requests.post('https://{}:8443/realtimeservice/services/RisPort'.format(args.cucm),
-                                         data=select_cm_device_req.format(state_info, model),
-                                         auth=requests.auth.HTTPBasicAuth(args.user, args.password),
-                                         headers = headers,
-                                         verify=False,
-                                         timeout=5)
+        all_devices = defaultdict(list)
+        for model in models_required:
+            response = requests.post('https://{}:8443/realtimeservice/services/RisPort'.format(args.cucm),
+                                     data=select_cm_device_req.format(
+                                         state_info, model),
+                                     auth=requests.auth.HTTPBasicAuth(
+                                         args.user, args.password),
+                                     headers=headers,
+                                     verify=False,
+                                     timeout=5)
 
-                xml = ET.fromstring(response.text)
-                for node in xml.iter('item'):
-                    if 'ns1:CmNode' in node.attrib.values():
-                        node_name = node.find('Name').text
-                        for j in node.find('CmDevices').findall('item'):
-                            all_devices[j.find('Name').text].append({'IP': j.find('IpAddress').text,
-                                                                     'node': node_name,
-                                                                     'Model': models[j.find('Model').text],
-                                                                     'Description': j.find('Description').text,
-                                                                     'Status': j.find('Status').text})
+            xml = ET.fromstring(response.text)
+            for node in xml.iter('item'):
+                if 'ns1:CmNode' in node.attrib.values():
+                    node_name = node.find('Name').text
+                    for j in node.find('CmDevices').findall('item'):
+                        all_devices[j.find('Name').text].append({'IP': j.find('IpAddress').text,
+                                                                 'node': node_name,
+                                                                 'Model': models[j.find('Model').text],
+                                                                 'Description': j.find('Description').text,
+                                                                 'Status': j.find('Status').text})
 
-
-                # SelectCmdevices supports Stateinfo string to be sent with subsequent requests. Try this!!
-                #for j in xml.iter('StateInfo'):
-                #    state_info = escape(j.text)
-                sleep(1)
-            for s in compare_outputs(temp, all_devices):
-                print '{} : {}'.format(datetime.now(), s)
-            temp = deepcopy(all_devices)
-            sleep(15)
+            # SelectCmdevices supports Stateinfo string to be sent with subsequent requests. Try this!!
+            # for j in xml.iter('StateInfo'):
+            #    state_info = escape(j.text)
+            sleep(1)
+        for s in compare_outputs(temp, all_devices):
+            print '{} : {}'.format(datetime.now(), s)
+        temp = deepcopy(all_devices)
+        sleep(15)
     except (SystemExit, KeyboardInterrupt):
         print "Exiting"
