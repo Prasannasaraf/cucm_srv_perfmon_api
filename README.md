@@ -12,9 +12,7 @@ For script to work:
 
 `pip install -r requirements`
 
-3) Run script with credentials from p.1
+3) Run the following command
 
-`chmod +x cmdevices.py`
-
-`./cmdevices.py -c 192.168.0.1 -u axl_admin -p *****`
+./cmdevices.py -c 10.10.20.1 -u administrator -p ciscopsdt
 
