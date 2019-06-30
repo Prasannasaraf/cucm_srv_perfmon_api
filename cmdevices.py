@@ -12,15 +12,8 @@ CLI Args:
 """
 
 import argparse
+
 import requests
-import xml.etree.ElementTree as ET
-from collections import defaultdict
-from time import sleep
-from datetime import datetime
-from xml.sax.saxutils import escape
-from copy import deepcopy
-import re
-from itertools import izip_longest
 
 requests.packages.urllib3.disable_warnings()
 
