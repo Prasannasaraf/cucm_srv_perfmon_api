@@ -45,7 +45,7 @@ client = Client(WSDL_URL, settings=settings, transport=transport, plugins=[MyLog
 service = client.create_service("{http://www.cisco.com/AXLAPIService/}AXLAPIBinding", CUCM_URL)
 
 try:
-  phone_resp = service.getPhone(phoneName)
+  phone_resp = service.getPhone(name = phoneName)
 except Fault as err:
   print("Zeep error: {0}".format(err))
 else:
